@@ -17,4 +17,4 @@ This is one of many Windows 8.1 Store projects that aims to restore the ability 
 - [ ] ESRB Ratings
 - [ ] More Apps!
 
-<iframe src="https://ms-store-appx.github.io/storefront/app-badge/winstore2014/ab2012ws980312bf.html" width="400" height="110" frameborder="0" scrolling="no"></iframe>
+[![badge](https://ms-store-appx.github.io/storefront/app-badge/winstore2014/ab2012ws980312.png)](ms-store://) 
