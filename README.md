@@ -13,8 +13,8 @@ This is one of many Windows 8.1 Store projects that aims to restore the ability 
 - [x] Better Search!
 - [x] Finished homepage
 - [x] Various other fixes
-- [x] Top Charts
-- [ ] ESRB Ratings
+- [ ] Top Charts
+- [x] ESRB Ratings
 - [ ] More Apps!
 
 [![badge](https://ms-store-appx.github.io/storefront/app-badge/winstore2014/ab2012ws980312.png?raw=true)](ms-store://) 
