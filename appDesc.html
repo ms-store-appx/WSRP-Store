@@ -46,12 +46,13 @@
     padding-left: 100px;
     width: 420px;
     padding-top: 30px;
+    margin-top: 65px;
 }
 
 /* Move the preview image into the right column */
 .app-box-img {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 420px;
     border: none;
     display: block;
     margin-bottom: 20px;
@@ -77,6 +78,17 @@
     padding: 8px 20px;
     background: #008a00;
     color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    border: none;
+}
+
+.disabledInstallButton {
+    display: inline-block;
+    margin: 10px 0 14px 0;
+    padding: 8px 20px;
+    background: #d9d9d9;
+    color: gray;
     font-size: 16px;
     text-decoration: none;
     border: none;
@@ -118,96 +130,224 @@
 }
 </style>
 <script>
-    function getUrlParams() {
-        var params = {};
-        var queryString = window.location.search.substring(1);
-        var queryArray = queryString.split("&");
-
-        for (var i = 0; i < queryArray.length; i++) {
-            var pair = queryArray[i].split("=");
-            if (pair.length === 2) {
-                var key = unescape(pair[0]);
-                var value = unescape(pair[1] || "");
-                params[key] = value ? value : "";
-            }
+function getUrlParams() {
+    var params = {};
+    var qs = window.location.search.substring(1).split("&");
+    for (var i = 0; i < qs.length; i++) {
+        var p = qs[i].split("=");
+        if (p.length === 2) {
+            params[unescape(p[0])] = unescape(p[1]);
         }
-        return params;
+    }
+    return params;
+}
+
+function loadXML(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            callback(xhr.responseText);
+        }
+    };
+    xhr.open("GET", url, true);
+    xhr.send();
+}
+
+function safeText(parent, tag, fallback) {
+    var node = parent.getElementsByTagName(tag)[0];
+    if (!node || !node.textContent) {
+        return fallback;
+    }
+    return node.textContent;
+}
+
+function safeList(parent, tag) {
+    var out = [];
+    var container = parent.getElementsByTagName(tag)[0];
+    if (!container) {
+        return out;
+    }
+    var features = container.getElementsByTagName("feature");
+    for (var i = 0; i < features.length; i++) {
+        if (features[i].textContent) {
+            out.push(features[i].textContent);
+        }
+    }
+    return out;
+}
+
+function loadAppDetails() {
+    var params = getUrlParams();
+    var appID = params["appID"];
+
+    if (!appID) {
+        alert("No appID provided.");
+        return;
     }
 
-    function loadAppDetails() {
-        var params = getUrlParams();
-        var name = params["name"] || "Unknown App";
-        var category = params["category"] || "Unknown Category";
-        var icon = params["icon"] || "appRes/default.png";
-        var publisher = params["publisher"] || "Unknown Publisher";
-        var description = params["description"] || "No description available.";
-        var features = params["features"] ? String(params["features"]).split(",") : [];
-        var installLink = params["install"] || "#";
+    loadXML("https://ms-store-appx.github.io/data.xml", function (xmlText) {
 
+        var parser = new DOMParser();
+        var xml = parser.parseFromString(xmlText, "text/xml");
+        var apps = xml.getElementsByTagName("app");
+
+        var found = null;
+
+        for (var i = 0; i < apps.length; i++) {
+            var idNode = apps[i].getElementsByTagName("appID")[0];
+            if (idNode && idNode.textContent === appID) {
+                found = apps[i];
+                break;
+            }
+        }
+
+        if (!found) {
+            alert("App not found in data.xml");
+            return;
+        }
+
+        // Extract fields
+        var name = safeText(found, "name", "Unknown App");
+	var publisher = safeText(found, "publisher", "Unknown Publisher");
+	var category = safeText(found, "category", "Unknown Category");
+	var description = safeText(found, "description", "No description available.");
+	var rating = safeText(found, "rating", "1");
+	var price = safeText(found, "price", "0");
+
+	var featuresNode = found.getElementsByTagName("features")[0];
+        var features = [];
+        if (featuresNode) {
+            var items = featuresNode.getElementsByTagName("feature");
+            for (var j = 0; j < items.length; j++) {
+                features.push(items[j].textContent);
+            }
+        }
+
+        // Populate UI
         var appContainer = document.getElementById("app-container");
         var detailsRight = document.getElementById("details-right");
 
-        if (detailsRight) {
-            detailsRight.innerHTML = "";
+        appContainer.innerHTML = "";
+        detailsRight.innerHTML = "";
 
-            var iconElement = document.createElement("img");
-            iconElement.src = icon;
-            iconElement.className = "app-box-img";
-            detailsRight.appendChild(iconElement);
+        // Title
+        var title = document.createElement("h1");
+        title.innerText = name;
+        appContainer.appendChild(title);
 
-            var publisherElement = document.createElement("p");
-            publisherElement.innerHTML = "Published by " + publisher;
-            detailsRight.appendChild(publisherElement);
+        // Install button
+        var install = document.createElement("a");
+        install.href = "https://ms-store-appx.github.io/install/" + appID + ".ps1";
 
-            var categoryElement = document.createElement("p");
-            categoryElement.innerHTML = "Category " + '<a href="pages/categoryPage.html?category='+ category + '" class="greenLink">' + category + '</a>';
-            detailsRight.appendChild(categoryElement);
+        if (price === "0") {
+            install.className = "install-btn";
+            install.innerText = "Install";
+        } else if (price === "x") {
+            install.className = "disabledInstallButton";
+            install.innerText = "Install";
+        } else if (price.indexOf("https://") !== -1) {
+	    install.className = "greenLink";
+	    install.innerText = "Get from publisher";
+	    install.href = 'javascript:window.open("' + price + '"); window.navigate("/appDesc.html?appID=' + appID + '");';
+	} else {
+            install.className = "install-btn";
+            install.innerText = "Buy";
         }
 
-        if (appContainer) {
-            appContainer.innerHTML = ""; // Clear existing content
+        appContainer.appendChild(install);
 
-            var titleElement = document.createElement("h1");
-            titleElement.innerText = name;
-            appContainer.appendChild(titleElement);
+	var supportedArchitectures;
+	if (appID.indexOf("neutral") !== -1) {
+	    supportedArchitectures = "x86, x64, ARM";
+	} else {
+	    supportedArchitectures = "x86";
+	}
 
-            var installButton = document.createElement("a");
-            installButton.href = installLink;
-            installButton.innerText = "Install";
-            installButton.className = "install-btn"; // Apply Metro styling
-            appContainer.appendChild(installButton);
-
-            var priceLabel = document.createElement("h2");
+        // Price label
+        var priceLabel = document.createElement("h2");
+        if (price === "0") {
             priceLabel.innerText = "Free";
-            appContainer.appendChild(priceLabel);
-
-            var descriptionElement = document.createElement("p");
-            descriptionElement.innerHTML = "<strong>Description</strong><br>" + description;
-            appContainer.appendChild(descriptionElement);
-
-            var featuresLabel = document.createElement("p");
-            featuresLabel.innerHTML = "<strong>Features</strong><br>";
-            appContainer.appendChild(featuresLabel);
-
-            var featuresList = document.createElement("ul");
-            for (var i = 0; i < features.length; i++) {
-                var featureItem = document.createElement("li");
-                featureItem.innerText = features[i];
-                featuresList.appendChild(featureItem);
-            }
-            appContainer.appendChild(featuresList);
+        } else if (price === "x") {
+            priceLabel.innerText = "Unavailable";
+        } else if (price.indexOf("https://") !== -1) {
+	    priceLabel.innerText = "";
+	} else {
+            priceLabel.innerText = "$" + price;
         }
+        appContainer.appendChild(priceLabel);
 
-        // Force refresh
-        document.body.style.display = "none";
-        document.body.style.display = "block";
-    }
+        // Description
+        var desc = document.createElement("p");
+        desc.innerHTML = "<strong>Description</strong><br>" + description;
+        appContainer.appendChild(desc);
 
-    window.onload = function() {
-        setTimeout(loadAppDetails, 500);
-    };
+        // ESRB rating
+        var esrb = document.createElement("img");
+        esrb.src = "https://ms-store-appx.github.io/storefront/images/ratings12esrb-cdn/esrb" + rating + "r.png";
+        esrb.className = "esrbLogo";
+        appContainer.appendChild(esrb);
+
+        // Features
+        var featLabel = document.createElement("p");
+        featLabel.innerHTML = "<strong>Features</strong>";
+        appContainer.appendChild(featLabel);
+
+        var ul = document.createElement("ul");
+        for (var k = 0; k < features.length; k++) {
+            var li = document.createElement("li");
+            li.innerText = features[k];
+            ul.appendChild(li);
+        }
+        appContainer.appendChild(ul);
+
+        // Right column (icon + metadata)
+        var icon = document.createElement("img");
+	icon.className = "app-box-img";
+	icon.src = "https://ms-store-appx.github.io/appRes/" + appID + "/screenshot.png";
+	icon.onerror = function () {
+	    this.onerror = null;
+	    this.src = "https://ms-store-appx.github.io/appRes/" + appID + "/StoreLogo.png";
+	};
+	detailsRight.appendChild(icon);
+
+        var pub = document.createElement("p");
+        pub.innerHTML = "Published by " + publisher;
+        detailsRight.appendChild(pub);
+
+        var cat = document.createElement("p");
+        cat.innerHTML = 'Category <a class="greenLink" href="pages/categoryPage.html?category=' + encodeURIComponent(category) + '">' + category + '</a>';
+        detailsRight.appendChild(cat);
+
+	var arch = document.createElement("p");
+	arch.innerHTML = "Supported processors: " + supportedArchitectures;
+	detailsRight.appendChild(arch);
+    });
+}
+
+window.onload = function () {
+    setTimeout(loadAppDetails, 100);
+};
 </script>
 
+    <script>
+
+function submitSearch() {
+    var box = document.getElementById("search-input");
+    var term = box.value;
+
+    // Prevent empty searches
+    if (!term || term.replace(/\s+/g, "") === "") {
+        alert("Please enter a search term.");
+        return;
+    }
+
+    // Encode for URL (IE‑safe)
+    var encoded = encodeURIComponent(term);
+
+    // Redirect to your search page
+    window.location.href = "pages/search.html?search=" + encoded;
+}
+</script>
 
 </head>
 <body>
@@ -221,8 +361,8 @@
 	    <a href="account.html" class="topLink"><h1>Account</h1></a>
 	</div>
 	<div class="search-bar">
-    	<input type="text" id="search-input" onkeyup="searchApps()" placeholder="Search for apps...">
-        <i class="fa fa-search"></i>
+    	<input type="text" id="search-input" placeholder="Search for apps...">
+        <i onclick="submitSearch()" class="fa fa-search"></i>
 	</div>
     </div>
     <div class="storeContent">
@@ -234,14 +374,5 @@
             <div id="details-right" class="details-right"></div>
         </div>
     </div>
-<script>
-
-    window.onload = function() {
-
-        setTimeout(loadAppDetails, 100);
-
-    };
-
-</script>
 </body>
 </html>

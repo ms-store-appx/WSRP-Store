@@ -19,12 +19,40 @@
 	    <a href="/account.html"class="topLink"><h1>Account</h1></a>
 	</div>
 	<div class="search-bar">
-    	<input type="text" id="search-input" onkeyup="searchApps()" placeholder="Search for apps...">
-        <i class="fa fa-search"></i>
+    	<input type="text" id="search-input" placeholder="Search for apps...">
+        <i onclick="submitSearch()" class="fa fa-search"></i>
 	</div>
     </div>
     
     <h1 class="pageTitle"><a id="back-button" class="back-button" onclick="history.back()"><img src="/res/ui/back_button_default.png"></a>Top Charts</h1>
-    <p>What did you expect to see here?</p>
+    <div class="elementGrid">
+    <a class="greenLink" href="#">Top free games</a>
+    <a class="greenLink" href="#">Top free apps</a>
+    <a class="greenLink" href="#">New & rising games</a>
+    <a class="greenLink" href="#">New & rising apps</a>
+    <br><br>
+    <a class="greenLink" href="#" style="padding-left: 105px;">Top grossing games</a>
+    <a class="greenLink" href="#">Top grossing apps</a>
+    </div>
+
+    <script>
+
+function submitSearch() {
+    var box = document.getElementById("search-input");
+    var term = box.value;
+
+    // Prevent empty searches
+    if (!term || term.replace(/\s+/g, "") === "") {
+        alert("Please enter a search term.");
+        return;
+    }
+
+    // Encode for URL (IE‑safe)
+    var encoded = encodeURIComponent(term);
+
+    // Redirect to your search page
+    window.location.href = "search.html?search=" + encoded;
+}
+</script>
 </body>
 </html>

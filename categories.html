@@ -25,7 +25,7 @@
 	</div>
 	<div class="search-bar">
     	<input type="text" id="search-input" onkeyup="searchApps()" placeholder="Search for apps...">
-        <i class="fa fa-search"></i>
+        <i onclick="submitSearch()" class="fa fa-search"></i>
 	</div>
     </div>
     <h1 class="pageTitle"><a id="back-button" class="back-button" onclick="history.back()"><img src="/res/ui/back_button_default.png"></a>Categories</h1>
@@ -54,7 +54,7 @@
 	<h3>Photo</h3>
     </div>
     </a>
-    <a class="notLink" href="categoryPage.html?category=Music%20and%20Video">
+    <a class="notLink" href="categoryPage.html?category=Music%20%26%20Video">
     <div class="category">
 	<img src="/res/icons/music.png">
 	<h3>Music & Video</h3>
@@ -66,25 +66,25 @@
 	<h3>Sports</h3>
     </div>
     </a>
-    <a class="notLink" href="categoryPage.html?category=Books%20and%20Reference">
+    <a class="notLink" href="categoryPage.html?category=Books%20%26%20Reference">
     <div class="category">
 	<img src="/res/icons/book.png">
 	<h3>Books & Reference</h3>
     </div>
     </a>
-    <a class="notLink" href="categoryPage.html?category=News%20and%20Weather">
+    <a class="notLink" href="categoryPage.html?category=News%20%26%20Weather">
     <div class="category">
 	<img src="/res/icons/news.png">
 	<h3>News & Weather</h3>
     </div>
     </a>
-    <a class="notLink" href="categoryPage.html?category=Health%20and%20Fitness">
+    <a class="notLink" href="categoryPage.html?category=Health%20%26%20Fitness">
     <div class="category">
 	<img src="/res/icons/health.png">
 	<h3>Health & Fitness</h3>
     </div>
     </a>
-    <a class="notLink" href="categoryPage.html?category=Food%20and%20Dining">
+    <a class="notLink" href="categoryPage.html?category=Food%20%26%20Dining">
     <div class="category">
 	<img src="/res/icons/food.png">
 	<h3>Food & Dining</h3>
@@ -151,5 +151,25 @@
     </div>
     </a>
     </div>
+
+    <script>
+
+function submitSearch() {
+    var box = document.getElementById("search-input");
+    var term = box.value;
+
+    // Prevent empty searches
+    if (!term || term.replace(/\s+/g, "") === "") {
+        alert("Please enter a search term.");
+        return;
+    }
+
+    // Encode for URL (IE-safe)
+    var encoded = encodeURIComponent(term);
+
+    // Redirect to your search page
+    window.location.href = "search.html?search=" + encoded;
+}
+</script>
 </body>
 </html>

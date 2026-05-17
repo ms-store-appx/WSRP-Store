@@ -1,16 +1,18 @@
-        body {
-            font-family: Segoe UI Light, Arial, sans-serif;
-            background-color: white;
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            background-color: #008A00;
-            padding-left: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+body {
+    font-family: Segoe UI Light, Arial, sans-serif;
+    background-color: white;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+.header {
+    background-color: #008A00;
+    padding-left: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
         .header-left {
             display: flex;
             align-items: center;
@@ -25,33 +27,14 @@
             margin-left: 20px;
             font-weight: normal;
         }
-.search-bar {
-    
-}
-.search-bar {
-    position: relative;
-    display: inline-block;
-    margin-right: 20px;
-}
-
-#search-input {
-    padding-right: 30px; /* Space for the icon */
-    width: 300px;
-    height: 15px;
-    font-size: 16px;
-}
-.search-bar i {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: gray;
-}
+        .search-bar { position: relative; display: inline-block; margin-right: 20px; }
+        #search-input { padding-right: 30px; width: 300px; height: 15px; font-size: 16px; }
+        .search-bar i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: gray; }
 .search-bar input {
     padding: 8px;
     border: none;
     font-size: 16px;
-    width: 300px;
+    width: 295px;
 }
 .store-container {
     display: inline-block;
@@ -62,9 +45,9 @@
 .app-box {
     float: left;
     width: 175px;
-    height: 290px;
+    height: 280px;
     padding: 5px;
-
+    position: relative;
     text-align: left;
     background: #fff;
 
@@ -76,16 +59,38 @@
 }
 
 .app-box:hover {
-    /* Thicker, more defined hover border */
     border-color: #ccc;
-}.app-box h3 {
+}
+.app-box h3 {
     padding-left: 5px;
+    margin-top: 0px;
+    padding-top: 7px;
+    font-size: 17px;
+    font-family: Segoe UI Light;
+    font-weight: 600;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+.app-box h4 {
+    padding-left: 5px;
+    margin-top: 0px;
+    padding-top: 0px;
+    font-size: 17px;
+    font-family: Segoe UI Light;
+    font-weight: 600;
 }
 .app-box p {
     padding-left: 5px;
+    font-size: 14px;
+    bottom: 0;
+    position: absolute;
+    padding-bottom: 0px;
+    color: #8C8C8C;
+    font-family: Segoe UI;
 }
 .app-box img {
     width: 175px;
+    background-color: #E7E3E3;
 }
 .app-box-img {
     width: 175px;
@@ -96,7 +101,7 @@
 	    display: block; /* Ensure full box is clickable */
 	}
 	.pageTitle {
-	    padding-left: 40px;
+	    padding-left: 0px;
 	    font-family: Segoe UI Light
 	    font-size: 50px;
 	    padding-bottom: 0px
@@ -202,7 +207,7 @@
 }
 .sectionDivider {
     padding-left: 100px;
-    font-family: Segoe UI Light
+    font-family: Segoe UI Light;
     font-size: 50px;
 }
 .buttonIndent {
@@ -245,4 +250,107 @@
 .greenLink {
     text-decoration: none;
     color: #008A00;
+    font-family: Segoe UI Light;
+}
+.largeLink {
+    font-size: 30px;
+    text-decoration: none;
+    color: #008A00;
+    font-family: Segoe UI Light;
+}
+.elementGrid {
+    display: grid;
+    grid-template-columns: 100px 200px 100px;
+    grid-template-rows: 50px 100px;
+}
+i {
+    cursor: pointer;
+}
+
+.fa.fa-search:hover {
+    position: absolute;
+    right: 2px;
+    top: 47%;
+    background-color: #008A00;
+    color: white;
+    padding: 4px;
+
+    font-size: 20px;
+}
+
+.esrbLogo {
+    height: 90px;
+    margin: 10px 2px;
+}
+.disabledMetroButton {
+    background-color: #E7E3E3;
+    font-family: Segoe UI;
+    font-weight: 600;
+    color: gray;
+    padding: 5px;
+    border: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 15px;
+    display: block;
+    width: auto;
+    height: 36px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: 75px;
+    text-decoration: none;
+}
+.contentPane {
+    display: inline-block;
+}
+
+#collections-row {
+    width: 500px;
+    height: 85px;
+    margin-top: 40px;
+    margin-left: 106px;
+    display: flex;
+    float: left;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.collection-tile {
+    width: 210px;
+    height: 85px;
+    border: 3px solid transparent;
+    cursor: pointer;
+    position: relative;
+}
+
+.collection-tile:hover {
+    border-color: #ccc; 
+}
+
+.collection-tile img {
+    width: 200px;
+    height: 50px;
+    margin-top: 5px;
+    margin-left: 5px;
+    object-fit: cover;
+}
+
+.collection-title {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    font-size: 17px;
+    color: #000;
+    font-family: "Segoe UI";
+}
+
+.horizontalScroll {
+    display: inline-block;
+
+    width: 100%; overflow-x: auto; overflow-y: hidden; white-space: normal;
+    background: transparent;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    float: left;
+    flex: 1;
 }
