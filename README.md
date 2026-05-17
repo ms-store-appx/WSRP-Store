@@ -5,16 +5,17 @@ This is one of many Windows 8.1 Store projects that aims to restore the ability 
 (Not finished by any stretch of the imagination)
 
 ## Currently finished:
-- [x] App descriptions (Mostly)
+- [x] App descriptions
 - [x] Live Tile support
 - [x] Categories
-
-## Coming Soon! (A checked box means the feature will be in the next update!)
 - [x] Better Search!
 - [x] Finished homepage
+- [x] ESRB Ratings
+
+## Coming Soon! (A checked box means the feature will be in the next update!)
 - [x] Various other fixes
 - [ ] Top Charts
-- [x] ESRB Ratings
+- [x] Collections
 - [ ] More Apps!
 
 [![badge](https://ms-store-appx.github.io/storefront/app-badge/winstore2014/ab2012ws980312.png?raw=true)](ms-store://) 
